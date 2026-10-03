@@ -87,6 +87,8 @@ ARTICLE_HTML = """<html><head><title>os — Python docs</title>
 <script>var tracking = 1;</script><style>p { color: red }</style></head>
 <body>
 <nav>Home | Next</nav>
+<table class="sidebar sidebar-collapse nomobile"><tr><td>Electromagnetism</td></tr></table>
+<div class="hatnote navigation-not-searchable">For other uses, see Ohm's acoustic law.</div>
 <h1>os — Miscellaneous
   operating system interfaces</h1>
 <p>Use the <a class="reference internal" href="#run"><code>run()</code></a> function.</p>
@@ -160,7 +162,8 @@ def test_html_to_text() -> None:
     # <pre> keeps its indentation.
     assert "```\ndef f():\n    return 1\n```" in text
     assert "Name | Value |" in text
-    for junk in ("tracking", "color: red", "Home | Next", "Copyright", "[1]", "[edit]"):
+    assert "For other uses, see Ohm's acoustic law." in text  # hatnotes stay
+    for junk in ("tracking", "color: red", "Home | Next", "Copyright", "[1]", "[edit]", "Electromagnetism"):
         assert junk not in text
 
 

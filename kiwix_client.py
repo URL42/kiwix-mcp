@@ -40,7 +40,9 @@ BLOCK_TAGS = [
 DROP_TAGS = ["head", "script", "style", "noscript", "nav", "footer", "template"]
 # sup.reference is Wikipedia's footnote markers ("[1]"). A bare .reference
 # would also delete Sphinx docs' cross-reference links, i.e. most code names.
-DROP_SELECTORS = [".mw-editsection", "sup.reference", ".navbox", ".noprint"]
+# .sidebar is Wikipedia's "part of a series" link box, which otherwise fills
+# the start of the first page. Infoboxes and hatnotes are kept on purpose.
+DROP_SELECTORS = [".mw-editsection", "sup.reference", ".navbox", ".sidebar", ".noprint"]
 
 CATALOG_TTL_SECONDS = 300
 
