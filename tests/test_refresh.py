@@ -50,11 +50,13 @@ class FakeMirror:
         self.files = files
         self.ranges = ranges
         self.requests: list[tuple[str, str | None]] = []
+        self.user_agents: list[str | None] = []
 
     def __call__(self, req: urllib.request.Request | str, timeout: float = 0) -> FakeResponse:
         url = req if isinstance(req, str) else req.full_url
         range_header = None if isinstance(req, str) else req.get_header("Range")
         self.requests.append((url, range_header))
+        self.user_agents.append(None if isinstance(req, str) else req.get_header("User-agent"))
         body = self.files[url]
         if range_header and self.ranges:
             start = int(range_header.removeprefix("bytes=").rstrip("-"))
@@ -166,6 +168,16 @@ def test_refresh_installs_new_version_and_removes_old(dirs: tuple[Path, Path]) -
     assert sorted(p.name for p in zim_dir.iterdir()) == ["devdocs_en_c_2026-07.zim"]
     assert (zim_dir / "devdocs_en_c_2026-07.zim").read_bytes() == b"new contents"
     assert list(staging_dir.iterdir()) == []
+
+
+def test_every_request_identifies_itself(dirs: tuple[Path, Path]) -> None:
+    zim_dir, staging_dir = dirs
+    mirror = _mirror_with("devdocs_en_c", "2026-07", b"new contents")
+
+    refresh_one(ZimSpec("devdocs", "devdocs_en_c"), zim_dir, staging_dir, 0, mirror=MIRROR, opener=mirror)
+
+    assert len(mirror.user_agents) == 3  # listing, file, .sha256
+    assert set(mirror.user_agents) == {refresh.USER_AGENT}
 
 
 def test_refresh_skips_when_up_to_date(dirs: tuple[Path, Path]) -> None:

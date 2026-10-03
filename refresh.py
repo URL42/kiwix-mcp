@@ -38,6 +38,10 @@ MIN_FREE_GB = float(os.environ.get("MIN_FREE_GB", "200"))
 GIB = 1024**3
 CHUNK = 1024 * 1024
 TIMEOUT_SECONDS = 60
+# Some mirrors (dumps.wikimedia.org) return 403 to urllib's default
+# "Python-urllib/3.x" User-Agent; Wikimedia's policy wants clients to say
+# who they are.
+USER_AGENT = "kiwix-mcp-refresh/0.1 (+https://github.com/URL42/kiwix-mcp)"
 
 # urllib.request.urlopen, or a fake in tests. Returns an HTTPResponse-like object.
 Opener = Callable[..., Any]
@@ -108,7 +112,8 @@ def check_space(free_bytes: int, needed_bytes: int, floor_bytes: int) -> None:
 
 
 def fetch_text(url: str, opener: Opener = urllib.request.urlopen) -> str:
-    with opener(url, timeout=TIMEOUT_SECONDS) as response:
+    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    with opener(request, timeout=TIMEOUT_SECONDS) as response:
         return response.read().decode("utf-8", errors="replace")
 
 
@@ -122,7 +127,9 @@ def _total_size(response: Any) -> int:
 def download(url: str, dest: Path, floor_bytes: int, opener: Opener = urllib.request.urlopen) -> None:
     """Download url to dest, resuming from a partial dest if one exists."""
     have = dest.stat().st_size if dest.exists() else 0
-    headers = {"Range": f"bytes={have}-"} if have else {}
+    headers = {"User-Agent": USER_AGENT}
+    if have:
+        headers["Range"] = f"bytes={have}-"
     try:
         response = opener(urllib.request.Request(url, headers=headers), timeout=TIMEOUT_SECONDS)
     except urllib.error.HTTPError as exc:
