@@ -38,13 +38,19 @@ mcp = MCPServer(
 )
 
 
+def _json(data: object) -> str:
+    # ensure_ascii=False: "—" stays one character instead of six (\u2014),
+    # which matters for a local model's context window.
+    return json.dumps(data, indent=2, ensure_ascii=False)
+
+
 def _error(exc: KiwixError, hint: str | None = None) -> str:
     if isinstance(exc, KiwixUnreachable):
         hint = "The offline library is down right now; retrying won't help until it is back."
     body: dict[str, str] = {"error": str(exc)}
     if hint:
         body["hint"] = hint
-    return json.dumps(body)
+    return _json(body)
 
 
 @mcp.tool()
@@ -59,7 +65,7 @@ async def list_sources() -> str:
         sources = await kiwix.sources()
     except KiwixError as exc:
         return _error(exc)
-    return json.dumps({"sources": [asdict(s) for s in sources]}, indent=2)
+    return _json({"sources": [asdict(s) for s in sources]})
 
 
 @mcp.tool()
@@ -78,9 +84,7 @@ async def search(query: str, sources: list[str] | None = None, limit: int = 10) 
         total, hits = await kiwix.search(query, sources, limit)
     except KiwixError as exc:
         return _error(exc, "Check source names with list_sources.")
-    return json.dumps(
-        {"query": query, "total_matches": total, "results": [asdict(h) for h in hits]}, indent=2
-    )
+    return _json({"query": query, "total_matches": total, "results": [asdict(h) for h in hits]})
 
 
 @mcp.tool()
@@ -97,7 +101,7 @@ async def lookup_title(source: str, term: str, limit: int = 10) -> str:
         hits = await kiwix.suggest(source, term, limit)
     except KiwixError as exc:
         return _error(exc, "Check the source name with list_sources.")
-    return json.dumps({"source": source, "results": [asdict(h) for h in hits]}, indent=2)
+    return _json({"source": source, "results": [asdict(h) for h in hits]})
 
 
 @mcp.tool()
@@ -115,7 +119,7 @@ async def read_article(source: str, path: str, offset: int = 0, max_chars: int =
     except KiwixError as exc:
         return _error(exc, "Use source and path exactly as search returned them.")
     text, next_offset = page_text(article.text, offset, max_chars)
-    return json.dumps(
+    return _json(
         {
             "source": article.source,
             "path": article.path,
@@ -124,8 +128,7 @@ async def read_article(source: str, path: str, offset: int = 0, max_chars: int =
             "offset": offset,
             "next_offset": next_offset,
             "text": text,
-        },
-        indent=2,
+        }
     )
 
 
