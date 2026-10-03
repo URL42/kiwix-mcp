@@ -2,7 +2,8 @@
 
 Offline reference library for home-lab agents. kiwix-serve serves Kiwix ZIM
 archives (Wikipedia, Stack Overflow, Stack Exchange, Wiktionary, iFixit,
-WikiMed, DevDocs) from bossbitch's SATA SSD; this repo's MCP server exposes
+WikiMed, DevDocs, plus survival and preparedness material) from bossbitch's
+SATA SSD; this repo's MCP server exposes
 them as tools over streamable HTTP, so a local model can search and read them
 without internet. A systemd timer refreshes the archives every three months.
 
@@ -36,8 +37,12 @@ model to use short keyword queries and re-search when results are weak.
 
 ## Content
 
-Listed in [content.toml](content.toml), about 175 GB in total. Stack Overflow
-alone is 107 GB. To add or drop an archive, edit that file. The `name` is the
+Listed in [content.toml](content.toml), about 190 GB in total. Stack Overflow
+alone is 107 GB.
+
+The `zimgit-*` libraries (post-disaster, medicine, water, food, knots) are
+collections of PDFs. You can browse them at :8078, but the agent can't use
+them: Kiwix doesn't index PDF text, and `read_article` only reads HTML. To add or drop an archive, edit that file. The `name` is the
 ZIM filename without `_YYYY-MM.zim`, and `dir` is its folder on
 https://download.kiwix.org/zim/.
 

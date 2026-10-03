@@ -74,3 +74,88 @@ name = "devdocs_en_cmake"
 [[zim]]
 dir = "devdocs"
 name = "devdocs_en_go"
+
+# --- Survival, preparedness and self-reliance (HTML, searchable by the agent) ---
+
+[[zim]]  # 331 MB, emergency medicine
+dir = "other"
+name = "wikem_en_all_nopic"
+
+[[zim]]  # 72 MB, military field medicine manuals
+dir = "zimit"
+name = "irp.fas.org_en_military-medicine"
+
+[[zim]]  # 2.3 GB, FEMA disaster planning (website snapshot)
+dir = "zimit"
+name = "www.ready.gov_en"
+
+[[zim]]  # 1.3 GB, prepping site (website snapshot)
+dir = "other"
+name = "trueprepper.com_en_all"
+
+[[zim]]  # 555 MB, appropriate technology
+dir = "other"
+name = "appropedia_en_all_maxi"
+
+[[zim]]  # 689 MB, off-grid and renewable energy
+dir = "other"
+name = "energypedia_en_all_nopic"
+
+[[zim]]  # 135 MB
+dir = "stack_exchange"
+name = "outdoors.stackexchange.com_en_all"
+
+[[zim]]  # 884 MB
+dir = "stack_exchange"
+name = "gardening.stackexchange.com_en_all"
+
+[[zim]]  # 107 MB, plant and garden encyclopedia
+dir = "other"
+name = "gardenology.org_en_all"
+
+[[zim]]  # 226 MB
+dir = "stack_exchange"
+name = "cooking.stackexchange.com_en_all"
+
+[[zim]]  # 1.9 GB
+dir = "stack_exchange"
+name = "diy.stackexchange.com_en_all"
+
+[[zim]]  # 72 MB
+dir = "stack_exchange"
+name = "ham.stackexchange.com_en_all"
+
+[[zim]]  # 26 MB
+dir = "stack_exchange"
+name = "sustainability.stackexchange.com_en_all"
+
+[[zim]]  # 260 MB
+dir = "wikivoyage"
+name = "wikivoyage_en_all_nopic"
+
+[[zim]]  # 3.3 GB, open textbooks
+dir = "wikibooks"
+name = "wikibooks_en_all_nopic"
+
+# --- PDF libraries: browsable at :8078, but the agent can't search or read
+# --- PDFs (Kiwix doesn't index PDF text and read_article only handles HTML).
+
+[[zim]]  # 615 MB
+dir = "other"
+name = "zimgit-post-disaster_en"
+
+[[zim]]  # 67 MB, field and emergency medicine books
+dir = "other"
+name = "zimgit-medicine_en"
+
+[[zim]]  # 20 MB, water collection and purification
+dir = "other"
+name = "zimgit-water_en"
+
+[[zim]]  # 93 MB
+dir = "other"
+name = "zimgit-food-preparation_en"
+
+[[zim]]  # 27 MB
+dir = "other"
+name = "zimgit-knots_en"
