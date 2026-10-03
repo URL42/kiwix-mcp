@@ -1,0 +1,12 @@
+[Unit]
+Description=Quarterly Kiwix ZIM refresh
+
+[Timer]
+# 03:00 on the 1st of Jan, Apr, Jul and Oct.
+OnCalendar=*-01,04,07,10-01 03:00:00
+# If bossbitch was off at that time, run at the next boot instead.
+Persistent=true
+RandomizedDelaySec=1h
+
+[Install]
+WantedBy=timers.target

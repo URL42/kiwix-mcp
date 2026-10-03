@@ -1,0 +1,18 @@
+[Unit]
+Description=Refresh Kiwix ZIM archives
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+# Don't run at all unless the SATA SSD is mounted.
+RequiresMountsFor=/mnt/sata
+
+[Service]
+Type=oneshot
+User=anthony
+WorkingDirectory=/home/anthony/apps/kiwix-mcp
+# The first run downloads ~175 GB, so no start timeout.
+TimeoutStartSec=infinity
+ExecStart=/usr/bin/docker compose run --rm refresh
+# Runs even if some downloads failed, so whatever did update gets served.
+# A failed refresh still marks the unit failed (systemctl --failed).
+ExecStopPost=/usr/bin/docker compose restart kiwix-serve

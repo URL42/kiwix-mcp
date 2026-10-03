@@ -1,0 +1,61 @@
+# ZIM files live on the SATA SSD. The binds use create_host_path: false, so if
+# /mnt/sata isn't mounted (and /mnt/sata/kiwix therefore doesn't exist) the
+# containers refuse to start instead of quietly using an empty folder on the
+# root drive.
+
+services:
+  kiwix-serve:
+    image: ghcr.io/kiwix/kiwix-serve:3.8.2
+    restart: unless-stopped
+    # --nodatealiases: stable names without _YYYY-MM, so refreshes don't
+    # rename sources. --blockexternal: no links out to the internet.
+    # The image's start script expands *.zim inside /data.
+    command: ["--nodatealiases", "--blockexternal", "*.zim"]
+    ports:
+      - "${KIWIX_HOST_PORT:-8078}:8080"
+    volumes:
+      - type: bind
+        source: ${KIWIX_DATA_DIR:-/mnt/sata/kiwix}/zim
+        target: /data
+        read_only: true
+        bind:
+          create_host_path: false
+
+  kiwix-mcp:
+    build: .
+    # Shared with the refresh service, so `docker compose build` (which skips
+    # services whose profile isn't active) also updates the refresh image.
+    image: kiwix-mcp:local
+    restart: unless-stopped
+    depends_on:
+      - kiwix-serve
+    ports:
+      - "${MCP_HOST_PORT:-8076}:8000"
+    environment:
+      KIWIX_URL: http://kiwix-serve:8080
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz', timeout=5)"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  # One-shot ZIM updater. Not started by `up`; run it with
+  # `docker compose run --rm refresh` (the systemd timer does this quarterly).
+  refresh:
+    build: .
+    image: kiwix-mcp:local
+    profiles: ["refresh"]
+    # Stdlib only, so plain python. entrypoint, not command, so that
+    # `run --rm refresh --dry-run` appends flags instead of replacing it.
+    # Runs as your user so the ZIM files are yours, not root's.
+    entrypoint: ["python", "refresh.py"]
+    user: "${PUID:-1000}:${PGID:-1000}"
+    environment:
+      KIWIX_DIR: /kiwix
+      MIN_FREE_GB: ${MIN_FREE_GB:-200}
+    volumes:
+      - type: bind
+        source: ${KIWIX_DATA_DIR:-/mnt/sata/kiwix}
+        target: /kiwix
+        bind:
+          create_host_path: false

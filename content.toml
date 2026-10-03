@@ -1,0 +1,76 @@
+# ZIM archives to keep on bossbitch, refreshed quarterly by refresh.py.
+#
+# dir:  directory under https://download.kiwix.org/zim/
+# name: filename without the _YYYY-MM.zim suffix. It's also the stable source
+#       name the MCP tools use (kiwix-serve runs with --nodatealiases).
+#
+# Approximate sizes as of 2026-10 in the comments.
+
+[[zim]]  # 49 GB
+dir = "wikipedia"
+name = "wikipedia_en_all_nopic"
+
+[[zim]]  # 2.1 GB
+dir = "wikipedia"
+name = "wikipedia_en_medicine_maxi"
+
+[[zim]]  # 107 GB
+dir = "stack_exchange"
+name = "stackoverflow.com_en_all"
+
+[[zim]]  # 3.9 GB
+dir = "stack_exchange"
+name = "electronics.stackexchange.com_en_all"
+
+[[zim]]  # 0.3 GB
+dir = "stack_exchange"
+name = "raspberrypi.stackexchange.com_en_all"
+
+[[zim]]  # 8.5 GB
+dir = "wiktionary"
+name = "wiktionary_en_all_nopic"
+
+[[zim]]  # 3.3 GB
+dir = "ifixit"
+name = "ifixit_en_all"
+
+# DevDocs: a few MB each.
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_python"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_docker"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_git"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_bash"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_fastapi"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_flask"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_c"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_cpp"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_cmake"
+
+[[zim]]
+dir = "devdocs"
+name = "devdocs_en_go"
